@@ -8,7 +8,7 @@ public class ProductDAO extends DbInitializer {
 
     private Product product;
 
-    public Product findProduct(int id) {
+    public Product findProductById(int id) {
         openSessionAndTransaction();
         product = session.find(Product.class, id);
         closeSessionAndTransaction();
@@ -18,6 +18,19 @@ public class ProductDAO extends DbInitializer {
     public void insertProduct(Product product) {
         openSessionAndTransaction();
         session.persist(product);
+        closeSessionAndTransaction();
+    }
+
+    public void updateProduct(Product product){
+        openSessionAndTransaction();
+        session.update(product);
+        closeSessionAndTransaction();
+    }
+
+    public void deleteProductById(int id){
+        openSessionAndTransaction();
+        product = session.find(Product.class,id);
+        session.delete(product);
         closeSessionAndTransaction();
     }
 
