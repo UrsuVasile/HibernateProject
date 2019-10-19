@@ -1,5 +1,7 @@
 package com.sda.java;
 
+import Service.Service;
+
 /**
  * Hello world!
  *
@@ -8,7 +10,7 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "test" );
-        System.out.println("Test branch");
+        Service service = new Service();
+        service.action();
     }
 }
