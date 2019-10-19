@@ -9,6 +9,6 @@ public class App
     public static void main( String[] args )
     {
         System.out.println( "test" );
-        System.out.println("test branch");
+        System.out.println("Test branch");
     }
 }
