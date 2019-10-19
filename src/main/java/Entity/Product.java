@@ -5,7 +5,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "products")
-public class Products {
+public class Product {
 
     private static final String PRODUCTS_SEQUENCE = "products_id_sequence";
     private static final String PRODUCTS_GENERATOR = "products_generator";
@@ -29,10 +29,10 @@ public class Products {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Products)) return false;
-        Products products = (Products) o;
-        return id == products.id &&
-                Objects.equals(getName(), products.getName());
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return id == product.id &&
+                Objects.equals(getName(), product.getName());
     }
 
     @Override
@@ -42,7 +42,7 @@ public class Products {
 
     @Override
     public String toString() {
-        return "Products{" +
+        return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
