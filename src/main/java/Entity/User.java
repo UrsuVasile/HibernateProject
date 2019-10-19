@@ -7,8 +7,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "user")
 public class User {
-    private static final String USER_SEQUENCE = "student_id_sequence";
-    private static final String USER_GENERATOR = "student_generator";
+    private static final String USER_SEQUENCE = "user_id_sequence";
+    private static final String USER_GENERATOR = "user_generator";
 
     @Id
     @SequenceGenerator(name="USER_GENERATOR", sequenceName = USER_SEQUENCE)
