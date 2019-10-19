@@ -15,9 +15,9 @@ public class ProductDAO extends DbInitializer {
         return product;
     }
 
-    public void insertProduct(String productName) {
+    public void insertProduct(Product product) {
         openSessionAndTransaction();
-        product.setName(productName);
+        session.persist(product);
         closeSessionAndTransaction();
     }
 
