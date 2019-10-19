@@ -1,8 +1,7 @@
 package Database;
 
+import CustomExceptions.ProductIdNotSet;
 import Entity.Product;
-
-import java.util.Scanner;
 
 public class ProductDAO extends DbInitializer {
 
@@ -22,9 +21,14 @@ public class ProductDAO extends DbInitializer {
     }
 
     public void updateProduct(Product product){
-        openSessionAndTransaction();
-        session.update(product);
-        closeSessionAndTransaction();
+        if(product.getId() != 0){
+            openSessionAndTransaction();
+            session.update(product);
+            closeSessionAndTransaction();
+        } else {
+            throw new ProductIdNotSet();
+        }
+
     }
 
     public void deleteProductById(int id){
