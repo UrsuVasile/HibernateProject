@@ -3,7 +3,11 @@ package Entity;
 
 import javax.persistence.*;
 import java.util.Objects;
+@NamedQueries({
 
+@NamedQuery(name = "validate_username_password", query = "select u from User u where u.username = :username and u.password = :password")
+
+})
 @Entity
 @Table(name = "users")
 public class User {

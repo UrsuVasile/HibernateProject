@@ -1,14 +1,18 @@
 package com.sda.java;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "test" );
-        System.out.println("Test branch");
+import Database.ProductDAO;
+import Entity.Product;
+import Service.Service;
+
+public class App {
+    public static void main(String[] args) {
+        Product product = new Product();
+        product.setName("Ariel");
+
+        ProductDAO productDAO = new ProductDAO();
+        productDAO.insertProduct(product);
+
+        Service service = new Service();
+        service.action();
     }
 }
