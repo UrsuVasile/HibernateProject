@@ -13,7 +13,6 @@ public class UserDao extends DbInitializer{
     public User findUserById(int id) {
         openSessionAndTransaction();
         User user = session.find(User.class, id);
-        System.out.println(user);
         closeSessionAndTransaction();
         return user;
     }
