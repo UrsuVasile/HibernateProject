@@ -21,6 +21,10 @@ public class Description {
     @Column
     private String description;
 
+    @OneToOne(cascade = CascadeType.ALL)   //mapedBy
+    @JoinColumn(name = "product_id")    // JoinColumn setez foregn Key-ul
+    private Product product;
+
     public String getDescription() {
         return description;
     }
