@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name ="description")
+@Table(name ="descriptions")
 public class Description {
 
 

@@ -5,7 +5,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
     private static final String USER_SEQUENCE = "user_id_sequence";
     private static final String USER_GENERATOR = "user_generator";
