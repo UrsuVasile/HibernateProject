@@ -11,8 +11,8 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 public abstract class DbInitializer {
     private SessionFactory sessionFactory;
 
-    private Session session;
-    private Transaction transaction;
+    protected Session session;
+    protected Transaction transaction;
 
     public DbInitializer(){
         StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
