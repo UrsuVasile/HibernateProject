@@ -1,13 +1,22 @@
 package Entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name ="description")
 public class Description {
+
+
+    private static final String DESCRIPTION_SEQUENCE = "description_id_sequence";
+    private static final String DESCRIPTION_GENERATOR = "description_generator";
+
+    @Id
+    @SequenceGenerator(name="DESCRIPTION_GENERATOR", sequenceName = DESCRIPTION_SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = DESCRIPTION_GENERATOR)
+
+    @Column
+    private int id;
 
     @Column
     private String description;
