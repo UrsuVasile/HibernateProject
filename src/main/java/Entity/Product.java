@@ -18,7 +18,7 @@ public class Product {
     @Column(name = "name")
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "product")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "product")
     private Description description;
 
     public String getName() {
