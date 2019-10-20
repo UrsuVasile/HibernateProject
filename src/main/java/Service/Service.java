@@ -35,41 +35,56 @@ public class Service {
 
     public void executeCommand(int command) {
         if (command == 1) {
-            System.out.println("You about to log in.");
-            System.out.print("Please enter your username:");
-            String username = scanner.next();
-            System.out.print("Please enter your password");
-            String password = scanner.next();
-
-            if (userDao.findUserAndPasswordFromDatabase(username, password)) {
-                System.out.println("Log In successfully");
-                while (isRunning) {
-                    System.out.println("Choose a command:");
-                    System.out.println("1.FindProductById");
-                    System.out.println("2.Insert a Product");
-                    System.out.println("3.Update a Product");
-                    int productCommand = scanner.nextInt();
-                    executeProductCommand(productCommand);
-                }
-            }
+            logIn();
         } else if (command == 2) {
+            signUp();
+        } else {
+            System.out.println("Insert a valid command");
+            action();
+        }
+    }
 
-                System.out.println("You are creating now an account: ");
-                System.out.println();
-                System.out.print("Please enter the username:");
-                String username = scanner.next();
-                user.setUsername(username);
-                System.out.print("Please enter the password:");
-                String password = scanner.next();
-                user.setPassword(password);
-                userDao.insertUser(user);
-                System.out.println("You've registered successfully.");
-                executeCommand(1);
-            } else {
-                System.out.println("Insert a valid command");
-                action();
+    private void signUp() {
+        System.out.println("You are creating now an account: ");
+        System.out.println();
+        System.out.print("Please enter the username:");
+        String username = scanner.next();
+        user.setUsername(username);
+        System.out.print("Please enter the password:");
+        String password = scanner.next();
+        System.out.print("Please re-enter the password:");
+        String password2 = scanner.next();
+        if(password.equals(password2)) {
+            user.setPassword(password);
+            userDao.insertUser(user);
+            System.out.println("You've registered successfully.");
+            executeCommand(1);
+        } else {
+            System.out.println("Passwords do not match");
+            System.out.println();
+            executeCommand(2);
+        }
+    }
+
+    private void logIn() {
+        System.out.println("You about to log in.");
+        System.out.print("Please enter your username:");
+        String username = scanner.next();
+        System.out.print("Please enter your password");
+        String password = scanner.next();
+
+        if (userDao.findUserAndPasswordFromDatabase(username, password)) {
+            System.out.println("Log In successfully");
+            while (isRunning) {
+                System.out.println("Choose a command:");
+                System.out.println("1.FindProductById");
+                System.out.println("2.Insert a Product");
+                System.out.println("3.Update a Product");
+                int productCommand = scanner.nextInt();
+                executeProductCommand(productCommand);
             }
         }
+    }
 
     public void executeProductCommand(int productCommand) {
         switch (productCommand) {
