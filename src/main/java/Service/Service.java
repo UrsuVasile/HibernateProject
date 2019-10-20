@@ -41,35 +41,35 @@ public class Service {
             System.out.print("Please enter your password");
             String password = scanner.next();
 
-
-                if (userDao.validateCredentials(username, password)) {
-                    System.out.println("Log In successfully");
-                    while (isRunning) {
-                        System.out.println("Choose a command:");
-                        System.out.println("1.FindProductById");
-                        System.out.println("2.Insert a Product");
-                        System.out.println("3.Update a Product");
-                        int productCommand = scanner.nextInt();
-                        executeProductCommand(productCommand);
-                    }
+            if (userDao.findUserAndPasswordFromDatabase(username, password)) {
+                System.out.println("Log In successfully");
+                while (isRunning) {
+                    System.out.println("Choose a command:");
+                    System.out.println("1.FindProductById");
+                    System.out.println("2.Insert a Product");
+                    System.out.println("3.Update a Product");
+                    int productCommand = scanner.nextInt();
+                    executeProductCommand(productCommand);
+                }
+            }
         } else if (command == 2) {
 
-            System.out.println("You are creating now an account: ");
-            System.out.println();
-            System.out.print("Please enter the username:");
-            String username = scanner.next();
-            user.setUsername(username);
-            System.out.print("Please enter the password:");
-            String password = scanner.next();
-            user.setPassword(password);
-            userDao.insertUser(user);
-            System.out.println("You've registered successfully.");
-            executeCommand(1);
-        } else {
-            System.out.println("Insert a valid command");
-            action();
+                System.out.println("You are creating now an account: ");
+                System.out.println();
+                System.out.print("Please enter the username:");
+                String username = scanner.next();
+                user.setUsername(username);
+                System.out.print("Please enter the password:");
+                String password = scanner.next();
+                user.setPassword(password);
+                userDao.insertUser(user);
+                System.out.println("You've registered successfully.");
+                executeCommand(1);
+            } else {
+                System.out.println("Insert a valid command");
+                action();
+            }
         }
-    }
 
     public void executeProductCommand(int productCommand) {
         switch (productCommand) {
@@ -91,5 +91,4 @@ public class Service {
                 isRunning = false;
         }
     }
-
 }
