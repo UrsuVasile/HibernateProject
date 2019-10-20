@@ -25,9 +25,9 @@ public class Service {
         user = new User();
         userDao = new UserDao();
         productDAO = new ProductDAO();
-        product = new Product();
+
         isRunning = true;
-        description = new Description();
+
     }
 
     public void action() {
@@ -39,6 +39,7 @@ public class Service {
     }
 
     public void executeCommand(int command) {
+
         if (command == 1) {
             logIn();
         } else if (command == 2) {
@@ -53,6 +54,8 @@ public class Service {
 
     private void doCommands() {
         while (isRunning) {
+            product = new Product();
+            description = new Description();
             System.out.println("Choose a command:");
             System.out.println("1.FindProductById");
             System.out.println("2.Insert a Product");
@@ -114,15 +117,19 @@ public class Service {
                 deleteProductCommand();
                 break;
             case 5:
-                System.out.println("This command will show all products.");
-                List<Product> products = productDAO.showAllProducts();
-                for(Product p : products){
-                    System.out.println(p);
-                }
+                showAllProductsCommand();
                 break;
             default:
                 System.out.println("Goodbye!");
                 isRunning = false;
+        }
+    }
+
+    private void showAllProductsCommand() {
+        System.out.println("This command will show all products.");
+        List<Product> products = productDAO.showAllProducts();
+        for(Product p : products){
+            System.out.println(p);
         }
     }
 
