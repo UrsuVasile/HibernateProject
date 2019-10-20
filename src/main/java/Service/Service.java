@@ -6,7 +6,7 @@ import Entity.Description;
 import Entity.Product;
 import Entity.User;
 
-import javax.persistence.NoResultException;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Service {
@@ -42,9 +42,23 @@ public class Service {
             logIn();
         } else if (command == 2) {
             signUp();
+        } else if (command == 3) {
+            doCommands();
         } else {
             System.out.println("Insert a valid command");
             action();
+        }
+    }
+
+    private void doCommands() {
+        while (isRunning) {
+            System.out.println("Choose a command:");
+            System.out.println("1.FindProductById");
+            System.out.println("2.Insert a Product");
+            System.out.println("3.Update a Product");
+            System.out.println("4.Delete a Product");
+            int productCommand = scanner.nextInt();
+            executeProductCommand(productCommand);
         }
     }
 
@@ -79,14 +93,7 @@ public class Service {
 
         if (userDao.findUserAndPasswordFromDatabase(username, password)) {
             System.out.println("Log In successfully");
-            while (isRunning) {
-                System.out.println("Choose a command:");
-                System.out.println("1.FindProductById");
-                System.out.println("2.Insert a Product");
-                System.out.println("3.Update a Product");
-                int productCommand = scanner.nextInt();
-                executeProductCommand(productCommand);
-            }
+            doCommands();
         }
     }
 
@@ -100,7 +107,7 @@ public class Service {
                 break;
             case 2:
                 System.out.println("This command inserts a product.");
-                System.out.print("Enter the name of the product");
+                System.out.println("Enter the name of the product");
                 String productName = scanner.next();
                 product.setName(productName);
 
@@ -121,10 +128,52 @@ public class Service {
                 description.setProduct(product);
                 productDAO.insertProduct(product);
                 break;
+            case 3:
+                System.out.println("This command updates a product.");
 
+                System.out.print("Insert the id of the product you wish to update: ");
+                int idProduct = scanner.nextInt();
+                product.setId(idProduct);
+
+                System.out.print("Insert the new name for the product:");
+                String nameProdUpdate = scanner.next();
+                product.setName(nameProdUpdate);
+
+                System.out.print("Insert the new description for the product:");
+                scanner.nextLine();
+                String descriptionProductUpdate = scanner.nextLine();
+                description.setDescription(descriptionProductUpdate);
+
+                System.out.print("Insert the new color for the product:");
+                String colorProductUpdate = scanner.next();
+                description.setColor(colorProductUpdate);
+
+                System.out.print("Insert the new type for the product:");
+                String typeProductUpdate = scanner.next();
+                description.setType(typeProductUpdate);
+
+                Product newProduct = productDAO.findProductById(idProduct);
+                int newId = newProduct.getDescription().getId();
+//                int newId = Optional.ofNullable(newProduct)
+//                            .map(Product::getDescription)
+//                            .map(Description::getId)
+//                            .orElse(0);
+                description.setId(newId);
+
+                product.setDescription(description);
+                description.setProduct(product);
+
+                productDAO.updateProduct(product);
+                break;
+            case 4:
+                System.out.println("This command will delete a product.");
+                System.out.print("Insert the id of the product you wish to delete: ");
+                int idProductToDelete = scanner.nextInt();
+                productDAO.deleteProductById(idProductToDelete);
             default:
                 System.out.println("bye");
                 isRunning = false;
         }
     }
+
 }

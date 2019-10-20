@@ -28,8 +28,16 @@ public class Description {
     private String description;
 
     @OneToOne(cascade = CascadeType.ALL)   //mapedBy
-    @JoinColumn(name = "product_id", nullable = false)    // JoinColumn setez foregn Key-ul
+    @JoinColumn(name = "product_id", nullable = false, unique = true)    // JoinColumn setez foregn Key-ul
     private Product product;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Product getProduct() {
         return product;
