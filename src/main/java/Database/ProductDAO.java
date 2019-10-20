@@ -23,10 +23,11 @@ public class ProductDAO extends DbInitializer {
         closeSessionAndTransaction();
     }
 
-    public void updateProduct(Product product) {
+    public void updateProduct(Product product, Description description) {
         if (product.getId() != 0) {
             openSessionAndTransaction();
             session.update(product);
+            session.update(description);
             closeSessionAndTransaction();
         } else {
             throw new ProductIdNotSet();

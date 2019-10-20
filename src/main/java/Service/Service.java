@@ -1,5 +1,6 @@
 package Service;
 
+import Database.DescriptionDao;
 import Database.ProductDAO;
 import Database.UserDao;
 import Entity.Description;
@@ -18,6 +19,7 @@ public class Service {
     private ProductDAO productDAO;
     private boolean isRunning;
     private Description description;
+    private DescriptionDao descriptionDao;
 
     public Service() {
         scanner = new Scanner(System.in);
@@ -27,6 +29,7 @@ public class Service {
         product = new Product();
         isRunning = true;
         description = new Description();
+        descriptionDao = new DescriptionDao();
     }
 
     public void action() {
@@ -136,7 +139,21 @@ public class Service {
                 System.out.print("Insert the new name for the product:");
                 String nameProdUpdate = scanner.next();
                 product.setName(nameProdUpdate);
-                productDAO.updateProduct(product);
+                System.out.print("Insert the new description for the product:");
+                scanner.nextLine();
+                String descriptionProductUpdate = scanner.nextLine();
+                description.setDescription(descriptionProductUpdate);
+                System.out.print("Insert the new color for the product:");
+                String colorProductUpdate = scanner.next();
+                description.setColor(colorProductUpdate);
+                System.out.print("Insert the new type for the product:");
+                String typeProductUpdate = scanner.next();
+                description.setType(typeProductUpdate);
+
+                product.setDescription(description);
+                description.setProduct(product);
+
+                productDAO.updateProduct(product, description);
                 break;
             default:
                 System.out.println("bye");
