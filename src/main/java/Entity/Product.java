@@ -3,6 +3,11 @@ package Entity;
 import javax.persistence.*;
 import java.util.Objects;
 
+@NamedQueries({
+        @NamedQuery(name = "show_all_products",
+                query = "SELECT p FROM Product p")
+})
+
 @Entity
 @Table(name = "products")
 public class Product {
