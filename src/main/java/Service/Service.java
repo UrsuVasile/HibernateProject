@@ -56,6 +56,7 @@ public class Service {
             System.out.println("1.FindProductById");
             System.out.println("2.Insert a Product");
             System.out.println("3.Update a Product");
+            System.out.println("4.Delete a Product");
             int productCommand = scanner.nextInt();
             executeProductCommand(productCommand);
         }
@@ -162,8 +163,13 @@ public class Service {
                 product.setDescription(description);
                 description.setProduct(product);
 
-                productDAO.updateProduct(product, description);
+                productDAO.updateProduct(product);
                 break;
+            case 4:
+                System.out.println("This command will delete a product.");
+                System.out.print("Insert the id of the product you wish to delete: ");
+                int idProductToDelete = scanner.nextInt();
+                productDAO.deleteProductById(idProductToDelete);
             default:
                 System.out.println("bye");
                 isRunning = false;
