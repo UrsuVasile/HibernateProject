@@ -5,7 +5,6 @@ import Database.UserDao;
 import Entity.Product;
 import Entity.User;
 
-import javax.persistence.NoResultException;
 import java.util.Scanner;
 
 public class Service {
@@ -42,7 +41,7 @@ public class Service {
             System.out.print("Please enter your password");
             String password = scanner.next();
 
-            try {
+
                 if (userDao.validateCredentials(username, password)) {
                     System.out.println("Log In successfully");
                     while (isRunning) {
@@ -53,11 +52,6 @@ public class Service {
                         int productCommand = scanner.nextInt();
                         executeProductCommand(productCommand);
                     }
-                }
-            } catch (NoResultException e) {
-                System.out.println("Invalid Credentials");
-            }
-
         } else if (command == 2) {
 
             System.out.println("You are creating now an account: ");

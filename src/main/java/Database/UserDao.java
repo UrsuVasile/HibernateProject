@@ -2,7 +2,6 @@ package Database;
 
 import Entity.User;
 
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 public class UserDao extends DbInitializer {
@@ -20,14 +19,13 @@ public class UserDao extends DbInitializer {
         return user;
     }
 
-    public boolean validateCredentials(String username, String password) throws NoResultException {
+    public boolean findUserAndPasswordFromDatabase(String name, String password) {
         openSessionAndTransaction();
-        Query query = session.createNamedQuery("validate_username_password");
-        query.setParameter("username", username);
+        Query query = session.createNamedQuery("find_user_and_pasword_from_database");
+        query.setParameter("username", name);
         query.setParameter("password", password);
         User user = (User) query.getSingleResult();
         closeSessionAndTransaction();
-        return user != null;
+        return user!=null;
     }
 }
-
