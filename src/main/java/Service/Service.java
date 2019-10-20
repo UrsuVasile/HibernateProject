@@ -1,13 +1,11 @@
 package Service;
 
-import Database.DescriptionDao;
 import Database.ProductDAO;
 import Database.UserDao;
 import Entity.Description;
 import Entity.Product;
 import Entity.User;
 
-import javax.persistence.NoResultException;
 import java.util.Scanner;
 
 public class Service {
@@ -19,7 +17,6 @@ public class Service {
     private ProductDAO productDAO;
     private boolean isRunning;
     private Description description;
-    private DescriptionDao descriptionDao;
 
     public Service() {
         scanner = new Scanner(System.in);
@@ -29,7 +26,6 @@ public class Service {
         product = new Product();
         isRunning = true;
         description = new Description();
-        descriptionDao = new DescriptionDao();
     }
 
     public void action() {
@@ -45,10 +41,9 @@ public class Service {
             logIn();
         } else if (command == 2) {
             signUp();
-        }else if(command == 3){
+        } else if (command == 3) {
             doCommands();
-        }
-        else {
+        } else {
             System.out.println("Insert a valid command");
             action();
         }
@@ -75,7 +70,7 @@ public class Service {
         String password = scanner.next();
         System.out.print("Please re-enter the password:");
         String password2 = scanner.next();
-        if(password.equals(password2)) {
+        if (password.equals(password2)) {
             user.setPassword(password);
             userDao.insertUser(user);
             System.out.println("You've registered successfully.");

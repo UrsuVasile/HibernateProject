@@ -27,7 +27,6 @@ public class ProductDAO extends DbInitializer {
         if (product.getId() != 0) {
             openSessionAndTransaction();
             session.update(product);
-            session.update(description);
             closeSessionAndTransaction();
         } else {
             throw new ProductIdNotSet();
