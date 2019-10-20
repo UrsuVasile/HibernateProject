@@ -5,17 +5,17 @@ import Database.UserDao;
 import Entity.Product;
 import Entity.User;
 
-import javax.persistence.NoResultException;
+import javax.security.sasl.SaslClient;
 import java.util.Scanner;
 
 public class Service {
 
-    Scanner scanner;
-    User user;
-    Product product;
-    UserDao userDao;
-    ProductDAO productDAO;
-    boolean isRunning;
+    private Scanner scanner;
+    private User user;
+    private Product product;
+    private UserDao userDao;
+    private ProductDAO productDAO;
+    private boolean isRunning;
 
     public Service() {
         scanner = new Scanner(System.in);
@@ -39,9 +39,23 @@ public class Service {
             logIn();
         } else if (command == 2) {
             signUp();
-        } else {
+        }else if(command == 3){
+            doCommands();
+        }
+        else {
             System.out.println("Insert a valid command");
             action();
+        }
+    }
+
+    private void doCommands() {
+        while (isRunning) {
+            System.out.println("Choose a command:");
+            System.out.println("1.FindProductById");
+            System.out.println("2.Insert a Product");
+            System.out.println("3.Update a Product");
+            int productCommand = scanner.nextInt();
+            executeProductCommand(productCommand);
         }
     }
 
@@ -55,7 +69,7 @@ public class Service {
         String password = scanner.next();
         System.out.print("Please re-enter the password:");
         String password2 = scanner.next();
-        if(password.equals(password2)) {
+        if (password.equals(password2)) {
             user.setPassword(password);
             userDao.insertUser(user);
             System.out.println("You've registered successfully.");
@@ -69,21 +83,14 @@ public class Service {
 
     private void logIn() {
         System.out.println("You about to log in.");
-        System.out.print("Please enter your username:");
+        System.out.print("Please enter your username: ");
         String username = scanner.next();
-        System.out.print("Please enter your password");
+        System.out.print("Please enter your password: ");
         String password = scanner.next();
 
         if (userDao.findUserAndPasswordFromDatabase(username, password)) {
             System.out.println("Log In successfully");
-            while (isRunning) {
-                System.out.println("Choose a command:");
-                System.out.println("1.FindProductById");
-                System.out.println("2.Insert a Product");
-                System.out.println("3.Update a Product");
-                int productCommand = scanner.nextInt();
-                executeProductCommand(productCommand);
-            }
+            doCommands();
         }
     }
 
@@ -101,6 +108,16 @@ public class Service {
                 String productName = scanner.next();
                 product.setName(productName);
                 productDAO.insertProduct(product);
+                break;
+            case 3:
+                System.out.println("This command updates a product.");
+                System.out.print("Insert the id of the product you wish to update: ");
+                int idProduct = scanner.nextInt();
+                product.setId(idProduct);
+                System.out.print("Insert the new name for the product:");
+                String nameProdUpdate = scanner.next();
+                product.setName(nameProdUpdate);
+                productDAO.updateProduct(product);
                 break;
             default:
                 System.out.println("bye");

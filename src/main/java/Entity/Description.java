@@ -22,7 +22,7 @@ public class Description {
     private String description;
 
     @OneToOne(cascade = CascadeType.ALL)   //mapedBy
-    @JoinColumn(name = "product_id")    // JoinColumn setez foregn Key-ul
+    @JoinColumn(name = "product_id", nullable = false)    // JoinColumn setez foregn Key-ul
     private Product product;
 
     public String getDescription() {
