@@ -6,6 +6,7 @@ import Entity.Description;
 import Entity.Product;
 import Entity.User;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Service {
@@ -128,22 +129,35 @@ public class Service {
                 break;
             case 3:
                 System.out.println("This command updates a product.");
+
                 System.out.print("Insert the id of the product you wish to update: ");
                 int idProduct = scanner.nextInt();
                 product.setId(idProduct);
+
                 System.out.print("Insert the new name for the product:");
                 String nameProdUpdate = scanner.next();
                 product.setName(nameProdUpdate);
+
                 System.out.print("Insert the new description for the product:");
                 scanner.nextLine();
                 String descriptionProductUpdate = scanner.nextLine();
                 description.setDescription(descriptionProductUpdate);
+
                 System.out.print("Insert the new color for the product:");
                 String colorProductUpdate = scanner.next();
                 description.setColor(colorProductUpdate);
+
                 System.out.print("Insert the new type for the product:");
                 String typeProductUpdate = scanner.next();
                 description.setType(typeProductUpdate);
+
+                Product newProduct = productDAO.findProductById(idProduct);
+                int newId = newProduct.getDescription().getId();
+//                int newId = Optional.ofNullable(newProduct)
+//                            .map(Product::getDescription)
+//                            .map(Description::getId)
+//                            .orElse(0);
+                description.setId(newId);
 
                 product.setDescription(description);
                 description.setProduct(product);
