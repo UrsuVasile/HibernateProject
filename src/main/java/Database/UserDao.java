@@ -2,7 +2,10 @@ package Database;
 
 import Entity.User;
 
-public class UserDao extends DbInitializer{
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+
+public class UserDao extends DbInitializer {
 
     public void insertUser(User user) {
         openSessionAndTransaction();
@@ -16,4 +19,15 @@ public class UserDao extends DbInitializer{
         closeSessionAndTransaction();
         return user;
     }
+
+    public boolean validateCredentials(String username, String password) throws NoResultException {
+        openSessionAndTransaction();
+        Query query = session.createNamedQuery("validate_username_password");
+        query.setParameter("username", username);
+        query.setParameter("password", password);
+        User user = (User) query.getSingleResult();
+        closeSessionAndTransaction();
+        return user != null;
+    }
 }
+
