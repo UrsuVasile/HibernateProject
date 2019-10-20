@@ -21,7 +21,7 @@ public class Service {
     public void action() {
         while (isRunning) {
             System.out.println("1.Login");
-            System.out.println("2.Sign in");
+            System.out.println("2.Sign up");
             System.out.println("Enter command: ");
             Integer command = scanner.nextInt();
             executeCommand(command);
@@ -37,6 +37,7 @@ public class Service {
                 String username = scanner.next();
                 System.out.println("Enter pasword:");
                 String password = scanner.next();
+
 
                 if (userDao.findUserAndPasswordFromDatabase(username, password)==false) {
                     System.out.println("Try again!");
