@@ -1,11 +1,14 @@
 package Database;
 
 import CustomExceptions.ProductIdNotSet;
+import Entity.Description;
 import Entity.Product;
+import sun.security.krb5.internal.crypto.Des;
 
 public class ProductDAO extends DbInitializer {
 
     private Product product;
+    private Description description;
 
     public Product findProductById(int id) {
         openSessionAndTransaction();
@@ -20,8 +23,8 @@ public class ProductDAO extends DbInitializer {
         closeSessionAndTransaction();
     }
 
-    public void updateProduct(Product product){
-        if(product.getId() != 0){
+    public void updateProduct(Product product) {
+        if (product.getId() != 0) {
             openSessionAndTransaction();
             session.update(product);
             closeSessionAndTransaction();
@@ -31,11 +34,10 @@ public class ProductDAO extends DbInitializer {
 
     }
 
-    public void deleteProductById(int id){
+    public void deleteProductById(int id) {
         openSessionAndTransaction();
-        product = session.find(Product.class,id);
+        product = session.find(Product.class, id);
         session.delete(product);
         closeSessionAndTransaction();
     }
-
 }

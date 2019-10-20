@@ -29,6 +29,14 @@ public class Product {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "product")
     private Description description;
 
+    public Description getDescription() {
+        return description;
+    }
+
+    public void setDescription(Description description) {
+        this.description = description;
+    }
+
     public String getName() {
         return name;
     }
@@ -56,6 +64,7 @@ public class Product {
         return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", description=" + description +
                 '}';
     }
 }

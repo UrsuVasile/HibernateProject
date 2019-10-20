@@ -2,6 +2,7 @@ package Service;
 
 import Database.ProductDAO;
 import Database.UserDao;
+import Entity.Description;
 import Entity.Product;
 import Entity.User;
 
@@ -10,12 +11,13 @@ import java.util.Scanner;
 
 public class Service {
 
-    Scanner scanner;
-    User user;
-    Product product;
-    UserDao userDao;
-    ProductDAO productDAO;
-    boolean isRunning;
+    private Scanner scanner;
+    private User user;
+    private Product product;
+    private UserDao userDao;
+    private ProductDAO productDAO;
+    private boolean isRunning;
+    private Description description;
 
     public Service() {
         scanner = new Scanner(System.in);
@@ -24,6 +26,7 @@ public class Service {
         productDAO = new ProductDAO();
         product = new Product();
         isRunning = true;
+        description = new Description();
     }
 
     public void action() {
@@ -55,7 +58,7 @@ public class Service {
         String password = scanner.next();
         System.out.print("Please re-enter the password:");
         String password2 = scanner.next();
-        if(password.equals(password2)) {
+        if (password.equals(password2)) {
             user.setPassword(password);
             userDao.insertUser(user);
             System.out.println("You've registered successfully.");
@@ -97,15 +100,31 @@ public class Service {
                 break;
             case 2:
                 System.out.println("This command inserts a product.");
-                System.out.println("Enter the name of the product");
+                System.out.print("Enter the name of the product");
                 String productName = scanner.next();
                 product.setName(productName);
+
+                System.out.println("Please enter a description");
+                scanner.nextLine();
+                String descriptionName = scanner.nextLine();
+                description.setDescription(descriptionName);
+
+                System.out.print("Enter color: ");
+                String descriptionColor = scanner.next();
+                description.setColor(descriptionColor);
+
+                System.out.print("Enter type: ");
+                String descriptionType = scanner.next();
+                description.setType(descriptionType);
+
+                product.setDescription(description);
+                description.setProduct(product);
                 productDAO.insertProduct(product);
                 break;
+
             default:
                 System.out.println("bye");
                 isRunning = false;
         }
     }
-
 }
