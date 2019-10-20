@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @NamedQueries({
         @NamedQuery(name = "find_user_and_pasword_from_database",
-        query = "select s from User s where s.name = :name and s.password = :password")
+        query = "select s from User s where s.username = :username and s.password = :password")
 })
 
 @Entity

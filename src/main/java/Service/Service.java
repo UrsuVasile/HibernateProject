@@ -21,7 +21,7 @@ public class Service {
     public void action() {
         while (isRunning) {
             System.out.println("1.Login");
-            System.out.println("1.Sign in");
+            System.out.println("2.Sign in");
             System.out.println("Enter command: ");
             Integer command = scanner.nextInt();
             executeCommand(command);
@@ -36,24 +36,31 @@ public class Service {
                 System.out.println("Enter username:");
                 String username = scanner.next();
                 System.out.println("Enter pasword:");
-                int password = scanner.nextInt();
+                String password = scanner.next();
 
-                if (userDao.findUserAndPasswordFromDatabase(username, password)) {
-                    System.out.println("Succes");
-                } else {
+                if (userDao.findUserAndPasswordFromDatabase(username, password)==false) {
                     System.out.println("Try again!");
+                } else {
+                    System.out.println("Succes!");
                 }
                 break;
             case 2:
                 System.out.println("Insert the Username: ");
-                String user = scanner.nextLine();
+                String user = scanner.next();
                 System.out.println("Insert the pasword: ");
-                String pass = scanner.next();
-                User user1 = new User();
-                user1.setUsername(user);
-                user1.setPassword(pass);
-
-                userDao.insertUser(user1);
+                String pass1 = scanner.next();
+                System.out.println("Insert the pasword again: ");
+                String pass2 = scanner.next();
+                if (pass1.equals(pass2)) {
+                    User user1 = new User();
+                    user1.setUsername(user);
+                    user1.setPassword(pass1);
+                    userDao.insertUser(user1);
+                    System.out.println("You have successfully created your account. Now you can login!");
+                }else{
+                    System.out.println("You did not enter the same password");
+                    System.out.println("Please try again");
+                }
                 break;
             default:
                 isRunning = false;

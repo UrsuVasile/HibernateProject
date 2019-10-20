@@ -19,10 +19,10 @@ public class UserDao extends DbInitializer {
         return user;
     }
 
-    public boolean findUserAndPasswordFromDatabase(String name, int password) {
+    public boolean findUserAndPasswordFromDatabase(String name, String password) {
         openSessionAndTransaction();
         Query query = session.createNamedQuery("find_user_and_pasword_from_database");
-        query.setParameter("name", name);
+        query.setParameter("username", name);
         query.setParameter("password", password);
         User user = (User) query.getSingleResult();
         closeSessionAndTransaction();
