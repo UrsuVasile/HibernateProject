@@ -5,6 +5,7 @@ import Database.UserDao;
 import Entity.Product;
 import Entity.User;
 
+import javax.persistence.NoResultException;
 import java.util.Scanner;
 
 public class Service {
@@ -106,4 +107,5 @@ public class Service {
                 isRunning = false;
         }
     }
+
 }
