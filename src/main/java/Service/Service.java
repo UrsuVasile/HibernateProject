@@ -25,9 +25,9 @@ public class Service {
         user = new User();
         userDao = new UserDao();
         productDAO = new ProductDAO();
-        product = new Product();
+
         isRunning = true;
-        description = new Description();
+
     }
 
     public void action() {
@@ -39,6 +39,7 @@ public class Service {
     }
 
     public void executeCommand(int command) {
+
         if (command == 1) {
             logIn();
         } else if (command == 2) {
@@ -53,6 +54,8 @@ public class Service {
 
     private void doCommands() {
         while (isRunning) {
+            product = new Product();
+            description = new Description();
             System.out.println("Choose a command:");
             System.out.println("1.FindProductById");
             System.out.println("2.Insert a Product");
@@ -102,87 +105,116 @@ public class Service {
     public void executeProductCommand(int productCommand) {
         switch (productCommand) {
             case 1:
-                System.out.println("This command finds a product by id.");
-                System.out.print("Insert the id of the product you wish to find:");
-                int productId = scanner.nextInt();
-                System.out.println(productDAO.findProductById(productId));
+                findProductByIdCommand();
                 break;
             case 2:
-                System.out.println("This command inserts a product.");
-                System.out.println("Enter the name of the product");
-                String productName = scanner.next();
-                product.setName(productName);
-
-                System.out.println("Please enter a description");
-                scanner.nextLine();
-                String descriptionName = scanner.nextLine();
-                description.setDescription(descriptionName);
-
-                System.out.print("Enter color: ");
-                String descriptionColor = scanner.next();
-                description.setColor(descriptionColor);
-
-                System.out.print("Enter type: ");
-                String descriptionType = scanner.next();
-                description.setType(descriptionType);
-
-                product.setDescription(description);
-                description.setProduct(product);
-                productDAO.insertProduct(product);
+                insertProductCommand();
                 break;
             case 3:
-                System.out.println("This command updates a product.");
+                updateProductCommand();
+                break;
+            case 4:
+                deleteProductCommand();
+                break;
+            case 5:
+                showAllProductsCommand();
+                break;
+            default:
+                System.out.println("Goodbye!");
+                isRunning = false;
+        }
+    }
 
-                System.out.print("Insert the id of the product you wish to update: ");
-                int idProduct = scanner.nextInt();
-                product.setId(idProduct);
+    private void showAllProductsCommand() {
+        System.out.println("This command will show all products.");
+        List<Product> products = productDAO.showAllProducts();
+        for(Product p : products){
+            System.out.println(p);
+        }
+    }
 
-                System.out.print("Insert the new name for the product:");
-                String nameProdUpdate = scanner.next();
-                product.setName(nameProdUpdate);
+    private void deleteProductCommand() {
+        System.out.println("This command will delete a product.");
+        System.out.print("Insert the id of the product you wish to delete: ");
+        int idProductToDelete = scanner.nextInt();
 
-                System.out.print("Insert the new description for the product:");
-                scanner.nextLine();
-                String descriptionProductUpdate = scanner.nextLine();
-                description.setDescription(descriptionProductUpdate);
+        if (productDAO.findProductById(idProductToDelete) != null) {
+            if (productDAO.findProductById(idProductToDelete).getId() != 0) {
+                productDAO.deleteProductById(idProductToDelete);
+                System.out.println("Product deleted.");
+            }
+        } else {
+            System.out.println("The id entered is not valid.");
+            executeProductCommand(4);
+        }
+    }
 
-                System.out.print("Insert the new color for the product:");
-                String colorProductUpdate = scanner.next();
-                description.setColor(colorProductUpdate);
+    private void updateProductCommand() {
+        System.out.println("This command updates a product.");
 
-                System.out.print("Insert the new type for the product:");
-                String typeProductUpdate = scanner.next();
-                description.setType(typeProductUpdate);
+        System.out.print("Insert the id of the product you wish to update: ");
+        int idProduct = scanner.nextInt();
+        product.setId(idProduct);
 
-                Product newProduct = productDAO.findProductById(idProduct);
-                int newId = newProduct.getDescription().getId();
+        System.out.print("Insert the new name for the product:");
+        String nameProdUpdate = scanner.next();
+        product.setName(nameProdUpdate);
+
+        System.out.print("Insert the new description for the product:");
+        scanner.nextLine();
+        String descriptionProductUpdate = scanner.nextLine();
+        description.setDescription(descriptionProductUpdate);
+
+        System.out.print("Insert the new color for the product:");
+        String colorProductUpdate = scanner.next();
+        description.setColor(colorProductUpdate);
+
+        System.out.print("Insert the new type for the product:");
+        String typeProductUpdate = scanner.next();
+        description.setType(typeProductUpdate);
+
+        Product newProduct = productDAO.findProductById(idProduct);
+        int newId = newProduct.getDescription().getId();
 //                int newId = Optional.ofNullable(newProduct)
 //                            .map(Product::getDescription)
 //                            .map(Description::getId)
 //                            .orElse(0);
-                description.setId(newId);
+        description.setId(newId);
 
-                product.setDescription(description);
-                description.setProduct(product);
+        product.setDescription(description);
+        description.setProduct(product);
+        productDAO.updateProduct(product);
+    }
 
-                productDAO.updateProduct(product);
-                break;
-            case 4:
-                System.out.println("This command will delete a product.");
-                System.out.print("Insert the id of the product you wish to delete: ");
-                int idProductToDelete = scanner.nextInt();
-                productDAO.deleteProductById(idProductToDelete);
-            case 5:
-                System.out.println("This command will show all products.");
-                List<Product> products = productDAO.showAllProducts();
-                for(Product p : products){
-                    System.out.println(p);
-                }
-                break;
-            default:
-                System.out.println("bye");
-                isRunning = false;
-        }
+    private void insertProductCommand() {
+        System.out.println("This command inserts a product.");
+        System.out.println("Enter the name of the product");
+        String productName = scanner.next();
+        product.setName(productName);
+
+        System.out.println("Please enter a description");
+        scanner.nextLine();
+        String descriptionName = scanner.nextLine();
+        description.setDescription(descriptionName);
+
+        System.out.print("Enter color: ");
+        String descriptionColor = scanner.next();
+        description.setColor(descriptionColor);
+
+        System.out.print("Enter type: ");
+        String descriptionType = scanner.next();
+        description.setType(descriptionType);
+
+        product.setDescription(description);
+        description.setProduct(product);
+        productDAO.insertProduct(product);
+    }
+
+    private void findProductByIdCommand() {
+        System.out.println("This command finds a product by id.");
+        System.out.print("Insert the id of the product you wish to find:");
+        int productId = scanner.nextInt();
+        System.out.println(productDAO.findProductById(productId));
     }
 
 }
