@@ -42,9 +42,23 @@ public class Service {
             logIn();
         } else if (command == 2) {
             signUp();
-        } else {
+        }else if(command == 3){
+            doCommands();
+        }
+        else {
             System.out.println("Insert a valid command");
             action();
+        }
+    }
+
+    private void doCommands() {
+        while (isRunning) {
+            System.out.println("Choose a command:");
+            System.out.println("1.FindProductById");
+            System.out.println("2.Insert a Product");
+            System.out.println("3.Update a Product");
+            int productCommand = scanner.nextInt();
+            executeProductCommand(productCommand);
         }
     }
 
@@ -58,7 +72,7 @@ public class Service {
         String password = scanner.next();
         System.out.print("Please re-enter the password:");
         String password2 = scanner.next();
-        if (password.equals(password2)) {
+        if(password.equals(password2)) {
             user.setPassword(password);
             userDao.insertUser(user);
             System.out.println("You've registered successfully.");
@@ -79,14 +93,7 @@ public class Service {
 
         if (userDao.findUserAndPasswordFromDatabase(username, password)) {
             System.out.println("Log In successfully");
-            while (isRunning) {
-                System.out.println("Choose a command:");
-                System.out.println("1.FindProductById");
-                System.out.println("2.Insert a Product");
-                System.out.println("3.Update a Product");
-                int productCommand = scanner.nextInt();
-                executeProductCommand(productCommand);
-            }
+            doCommands();
         }
     }
 
@@ -100,7 +107,7 @@ public class Service {
                 break;
             case 2:
                 System.out.println("This command inserts a product.");
-                System.out.print("Enter the name of the product");
+                System.out.println("Enter the name of the product");
                 String productName = scanner.next();
                 product.setName(productName);
 
@@ -121,10 +128,20 @@ public class Service {
                 description.setProduct(product);
                 productDAO.insertProduct(product);
                 break;
-
+            case 3:
+                System.out.println("This command updates a product.");
+                System.out.print("Insert the id of the product you wish to update: ");
+                int idProduct = scanner.nextInt();
+                product.setId(idProduct);
+                System.out.print("Insert the new name for the product:");
+                String nameProdUpdate = scanner.next();
+                product.setName(nameProdUpdate);
+                productDAO.updateProduct(product);
+                break;
             default:
                 System.out.println("bye");
                 isRunning = false;
         }
     }
+
 }
