@@ -5,10 +5,12 @@ import Entity.Description;
 import Entity.Product;
 import sun.security.krb5.internal.crypto.Des;
 
+import javax.persistence.Query;
+import java.util.List;
+
 public class ProductDAO extends DbInitializer {
 
     private Product product;
-    private Description description;
 
     public Product findProductById(int id) {
         openSessionAndTransaction();
@@ -31,7 +33,6 @@ public class ProductDAO extends DbInitializer {
         } else {
             throw new ProductIdNotSet();
         }
-
     }
 
     public void deleteProductById(int id) {
@@ -39,5 +40,13 @@ public class ProductDAO extends DbInitializer {
         product = session.find(Product.class, id);
         session.delete(product);
         closeSessionAndTransaction();
+    }
+
+    public List<Product> showAllProducts() {
+        openSessionAndTransaction();
+        Query query = session.createNamedQuery("show_all_products");
+        List<Product> products = query.getResultList();
+        closeSessionAndTransaction();
+        return products;
     }
 }

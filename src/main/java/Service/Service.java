@@ -6,6 +6,7 @@ import Entity.Description;
 import Entity.Product;
 import Entity.User;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -57,6 +58,7 @@ public class Service {
             System.out.println("2.Insert a Product");
             System.out.println("3.Update a Product");
             System.out.println("4.Delete a Product");
+            System.out.println("5.Showw all Product");
             int productCommand = scanner.nextInt();
             executeProductCommand(productCommand);
         }
@@ -170,6 +172,13 @@ public class Service {
                 System.out.print("Insert the id of the product you wish to delete: ");
                 int idProductToDelete = scanner.nextInt();
                 productDAO.deleteProductById(idProductToDelete);
+            case 5:
+                System.out.println("This command will show all products.");
+                List<Product> products = productDAO.showAllProducts();
+                for(Product p : products){
+                    System.out.println(p);
+                }
+                break;
             default:
                 System.out.println("bye");
                 isRunning = false;
