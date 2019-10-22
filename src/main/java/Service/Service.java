@@ -6,6 +6,9 @@ import Entity.Description;
 import Entity.Product;
 import Entity.User;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -78,7 +81,7 @@ public class Service {
         System.out.print("Please re-enter the password:");
         String password2 = scanner.next();
         if (password.equals(password2)) {
-            user.setPassword(password);
+            user.setPassword(md5(password));
             userDao.insertUser(user);
             System.out.println("You've registered successfully.");
             executeCommand(1);
@@ -128,7 +131,7 @@ public class Service {
     private void showAllProductsCommand() {
         System.out.println("This command will show all products.");
         List<Product> products = productDAO.showAllProducts();
-        for(Product p : products){
+        for (Product p : products) {
             System.out.println(p);
         }
     }
@@ -215,6 +218,33 @@ public class Service {
         System.out.print("Insert the id of the product you wish to find:");
         int productId = scanner.nextInt();
         System.out.println(productDAO.findProductById(productId));
+    }
+
+    public String md5(String input) {
+
+        String md5;
+        String hash = null;
+
+        if (null == input) return null;
+
+        try {
+
+            //Create MessageDigest object for MD5
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+
+            //Update input string in message digest
+            digest.update(input.getBytes(), 0, input.length());
+
+            //Converts message digest value in base 16 (hex)
+            md5 = new BigInteger(1, digest.digest()).toString(16);
+            //String salt = "Random$SaltValue#WithSpecialCharacters12@$@4&#%^$*";
+            hash = md5; // hash = md5+salt;
+
+        } catch (NoSuchAlgorithmException e) {
+
+            e.printStackTrace();
+        }
+        return hash;
     }
 
 }
