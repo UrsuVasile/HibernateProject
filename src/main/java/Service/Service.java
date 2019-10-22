@@ -10,7 +10,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class Service {
@@ -222,8 +221,7 @@ public class Service {
 
     public String md5(String input) {
 
-        String md5;
-        String hash = null;
+        String md5 = null;
 
         if (null == input) return null;
 
@@ -237,14 +235,14 @@ public class Service {
 
             //Converts message digest value in base 16 (hex)
             md5 = new BigInteger(1, digest.digest()).toString(16);
-            //String salt = "Random$SaltValue#WithSpecialCharacters12@$@4&#%^$*";
-            hash = md5; // hash = md5+salt;
 
         } catch (NoSuchAlgorithmException e) {
 
             e.printStackTrace();
         }
-        return hash;
+        return md5;
     }
 
 }
+
+
