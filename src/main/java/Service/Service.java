@@ -241,8 +241,7 @@ public class Service {
             md5 = new BigInteger(1, digest.digest()).toString(16);
 
         } catch (NoSuchAlgorithmException e) {
-
-            e.printStackTrace();
+            System.out.println("I'm sorry, but MD5 is not a valid message digest algorithm");
         }
         return md5;
     }
@@ -261,9 +260,8 @@ public class Service {
                 hash.append(digits[b & 0x0f]);
             }
         } catch (NoSuchAlgorithmException e) {
-            // handle error here.
+            System.out.println("I'm sorry, but SHA-1 is not a valid message digest algorithm");
         }
-
         return hash.toString();
     }
 
