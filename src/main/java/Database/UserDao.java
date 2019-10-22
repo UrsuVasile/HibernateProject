@@ -26,7 +26,10 @@ public class UserDao extends DbInitializer {
         openSessionAndTransaction();
         Query query = session.createNamedQuery("find_user_and_pasword_from_database");
         query.setParameter("username", name);
-        query.setParameter("password", service.md5(password));
+
+        String saltedPassword = "bubulici" +  password;
+        String hashedPassword = service.generateHash(saltedPassword);
+        query.setParameter("password", hashedPassword);
         try {
             User user = (User) query.getSingleResult();
             closeSessionAndTransaction();

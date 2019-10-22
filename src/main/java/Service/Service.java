@@ -79,8 +79,12 @@ public class Service {
         String password = scanner.next();
         System.out.print("Please re-enter the password:");
         String password2 = scanner.next();
+
         if (password.equals(password2)) {
-            user.setPassword(md5(password));
+            String saltedPassword = "bubulici" +  password;
+            String hashedPassword = generateHash(saltedPassword);
+
+            user.setPassword(hashedPassword);
             userDao.insertUser(user);
             System.out.println("You've registered successfully.");
             executeCommand(1);
@@ -241,6 +245,26 @@ public class Service {
             e.printStackTrace();
         }
         return md5;
+    }
+
+    public static String generateHash(String input) {
+        StringBuilder hash = new StringBuilder();
+
+        try {
+            MessageDigest sha = MessageDigest.getInstance("SHA-1");
+            byte[] hashedBytes = sha.digest(input.getBytes());
+            char[] digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                    'a', 'b', 'c', 'd', 'e', 'f'};
+            for (int idx = 0; idx < hashedBytes.length; idx++) {
+                byte b = hashedBytes[idx];
+                hash.append(digits[(b & 0xf0) >> 4]);
+                hash.append(digits[b & 0x0f]);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            // handle error here.
+        }
+
+        return hash.toString();
     }
 
 }
