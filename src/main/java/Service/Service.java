@@ -1,10 +1,9 @@
 package Service;
 
 import Database.ProductDAO;
+import Database.StockDao;
 import Database.UserDao;
-import Entity.Description;
-import Entity.Product;
-import Entity.User;
+import Entity.*;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -20,16 +19,20 @@ public class Service {
     private UserDao userDao;
     private ProductDAO productDAO;
     private boolean isRunning;
+    private boolean executeStock;
     private Description description;
+    private Stock stock;
+    private StockDao stockDao;
+    private Result result;
 
     public Service() {
         scanner = new Scanner(System.in);
         user = new User();
         userDao = new UserDao();
         productDAO = new ProductDAO();
-
         isRunning = true;
-
+        executeStock = true;
+        result = new Result();
     }
 
     public void action() {
@@ -58,12 +61,16 @@ public class Service {
         while (isRunning) {
             product = new Product();
             description = new Description();
+            stock = new Stock();
+
             System.out.println("Choose a command:");
             System.out.println("1.FindProductById");
             System.out.println("2.Insert a Product");
             System.out.println("3.Update a Product");
             System.out.println("4.Delete a Product");
-            System.out.println("5.Showw all Product");
+            System.out.println("5.Show all Products");
+            System.out.println("6.Stock Controller");
+            System.out.println("7.Exit");
             int productCommand = scanner.nextInt();
             executeProductCommand(productCommand);
         }
@@ -81,7 +88,7 @@ public class Service {
         String password2 = scanner.next();
 
         if (password.equals(password2)) {
-            String saltedPassword = "bubulici" +  password;
+            String saltedPassword = "bubulici" + password;
             String hashedPassword = generateHash(saltedPassword);
 
             user.setPassword(hashedPassword);
@@ -125,8 +132,13 @@ public class Service {
             case 5:
                 showAllProductsCommand();
                 break;
-            default:
+            case 6:
+                executeStockCommand();
+            case 7:
                 System.out.println("Goodbye!");
+                isRunning = false;
+                break;
+            default:
                 isRunning = false;
         }
     }
@@ -179,13 +191,22 @@ public class Service {
         String typeProductUpdate = scanner.next();
         description.setType(typeProductUpdate);
 
+        System.out.print("Insert the new stock for the product:");
+        int stockProductUpdate = scanner.nextInt();
+        stock.setStockQuantity(stockProductUpdate);
+
         Product newProduct = productDAO.findProductById(idProduct);
         int newId = newProduct.getDescription().getId();
+        int stockId = newProduct.getStock().getId();
 //                int newId = Optional.ofNullable(newProduct)
 //                            .map(Product::getDescription)
 //                            .map(Description::getId)
 //                            .orElse(0);
         description.setId(newId);
+        stock.setId(stockId);
+
+        product.setStock(stock);
+        stock.setProduct(product);
 
         product.setDescription(description);
         description.setProduct(product);
@@ -210,6 +231,13 @@ public class Service {
         System.out.print("Enter type: ");
         String descriptionType = scanner.next();
         description.setType(descriptionType);
+
+        System.out.print("Enter stock: ");
+        int stockQuantity = scanner.nextInt();
+        stock.setStockQuantity(stockQuantity);
+
+        stock.setProduct(product);
+        product.setStock(stock);
 
         product.setDescription(description);
         description.setProduct(product);
@@ -265,6 +293,71 @@ public class Service {
         return hash.toString();
     }
 
+    public void executeStockCommand() {
+        System.out.println("Here you can perform different operations related to stock");
+        System.out.println("Choose a command: ");
+        System.out.println();
+        while (executeStock) {
+            System.out.println("1.Display the total stock in the store");
+            System.out.println("2.Display the stock of each product");
+            System.out.println("3.Show products with stock = 0");
+            System.out.println("4.Displays products with sufficient stock(stock>10)");
+            System.out.println("5.Back to the main menu");
+            System.out.println("6.Exit");
+            int command = scanner.nextInt();
+
+            if (command <= 6) {
+                doExecuteStock(command);
+            } else {
+                System.out.println("Enter a number between 1 and 6");
+                System.out.println();
+                executeStockCommand();
+            }
+        }
+    }
+
+    public void doExecuteStock(int command) {
+        stockDao = new StockDao();
+        switch (command) {
+            case 1:
+                System.out.println("Total stock of the store is: " + stockDao.totalStock());
+                System.out.println();
+                break;
+            case 2:
+                List<Result> list = stockDao.stockForEachProduct();
+                for (Result p : list) {
+                    System.out.println(p);
+                }
+                System.out.println();
+                break;
+            case 3:
+                List<Result> results = stockDao.showProductsWithStockZero();
+                for (Result p : results) {
+                    System.out.println(p);
+                }
+                System.out.println();
+                break;
+            case 4:
+                List<Result> resultsSufficient = stockDao.displayProductsWithSufficientStock();
+                for (Result p : resultsSufficient) {
+                    System.out.println(p);
+                }
+                System.out.println();
+                break;
+            case 5:
+                doCommands();
+                break;
+            case 6:
+                executeStock = false;
+            default:
+                executeStock = false;
+        }
+    }
+
+
+    public void displayProductsWithSufficientStock() {
+
+    }
 }
 
 

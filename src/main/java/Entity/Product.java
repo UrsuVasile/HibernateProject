@@ -9,7 +9,7 @@ import java.util.Objects;
 })
 
 @Entity
-@Table(name = "products")
+@Table(name = "products", schema = "hibernateproject")
 public class Product {
 
     private static final String PRODUCTS_SEQUENCE = "products_id_sequence";
@@ -34,6 +34,17 @@ public class Product {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "product")
     private Description description;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "product")
+    private Stock stock;
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
+    }
+
     public Description getDescription() {
         return description;
     }
@@ -55,13 +66,15 @@ public class Product {
         if (this == o) return true;
         if (!(o instanceof Product)) return false;
         Product product = (Product) o;
-        return id == product.id &&
-                Objects.equals(getName(), product.getName());
+        return getId() == product.getId() &&
+                Objects.equals(getName(), product.getName()) &&
+                Objects.equals(getDescription(), product.getDescription()) &&
+                Objects.equals(getStock(), product.getStock());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, getName());
+        return Objects.hash(getId(), getName(), getDescription(), getStock());
     }
 
     @Override
@@ -70,6 +83,7 @@ public class Product {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description=" + description +
+                ", stock=" + stock +
                 '}';
     }
 }

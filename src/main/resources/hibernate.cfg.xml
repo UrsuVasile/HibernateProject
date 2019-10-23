@@ -13,5 +13,6 @@
         <mapping class="Entity.User"/>
         <mapping class="Entity.Description"/>
         <mapping class="Entity.Product"/>
+        <mapping class="Entity.Stock"/>
     </session-factory>
 </hibernate-configuration>
