@@ -353,11 +353,6 @@ public class Service {
                 executeStock = false;
         }
     }
-
-
-    public void displayProductsWithSufficientStock() {
-
-    }
 }
 
 
