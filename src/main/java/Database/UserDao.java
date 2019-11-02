@@ -71,4 +71,12 @@ public class UserDao extends DbInitializer {
         return rol;
     }
 
+    public boolean verifyIfExistUsers() {
+        boolean user = true;
+        openSessionAndTransaction();
+        Query query = session.createNamedQuery("show_all_users");
+        closeSessionAndTransaction();
+        return user;
+    }
+
 }

@@ -5,10 +5,12 @@ import Database.StockDao;
 import Database.UserDao;
 import Entity.*;
 
+import javax.jws.soap.SOAPBinding;
 import javax.persistence.NoResultException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -109,12 +111,21 @@ public class Service {
         if (password.equals(password2)) {
             String saltedPassword = "bubulici" + password;
             String hashedPassword = generateHash(saltedPassword);
+            List<User> users = userDao.showAllUsers();
 
-            user.setPassword(hashedPassword);
-            user.setRol("guest");
-            userDao.insertUser(user);
-            System.out.println("You've registered successfully.");
-            executeCommand(1);
+                if (users.size()==0){
+                    user.setPassword(hashedPassword);
+                    user.setRol("admin");
+                    userDao.insertUser(user);
+                    System.out.println("You've registered successfully.");
+                    executeCommand(1);
+                }else if (users.size()>0) {
+                    user.setPassword(hashedPassword);
+                    user.setRol("guest");
+                    userDao.insertUser(user);
+                    System.out.println("You've registered successfully.");
+                    executeCommand(1);
+                }
         } else {
             System.out.println("Passwords do not match");
             System.out.println();
@@ -142,7 +153,7 @@ public class Service {
         } catch (NoResultException e) {
             System.out.println("Wrong password or username!");
             System.out.println("Please, try again:");
-            logIn();
+            action();
         }
     }
 
