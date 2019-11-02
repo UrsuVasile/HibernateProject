@@ -6,7 +6,13 @@ import java.util.Objects;
 
 @NamedQueries({
         @NamedQuery(name = "find_user_and_pasword_from_database",
-        query = "select s from User s where s.username = :username and s.password = :password")
+                query = "select s from User s where s.username = :username and s.password = :password"),
+        @NamedQuery(name = "find_user",
+                query = "select s.username from User s where s.username = 'vasile'"),
+        @NamedQuery(name = "find_password",
+                query = "select s from User s where s.password = 'a529b0c721163d59b5525fb6527a51b059cfad3d'"),
+        @NamedQuery(name = "show_all_users",
+                query = "SELECT s FROM User s")
 })
 
 @Entity
@@ -16,8 +22,8 @@ public class User {
     private static final String USER_GENERATOR = "user_generator";
 
     @Id
-    @SequenceGenerator(name="USER_GENERATOR", sequenceName = USER_SEQUENCE)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = USER_GENERATOR)
+    @SequenceGenerator(name = "USER_GENERATOR", sequenceName = USER_SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = USER_GENERATOR)
     private int id;
 
     @Column(name = "username")
@@ -90,7 +96,6 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", rol='" + rol + '\'' +
                 '}';
     }

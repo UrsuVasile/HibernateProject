@@ -5,6 +5,7 @@ import Database.StockDao;
 import Database.UserDao;
 import Entity.*;
 
+import javax.persistence.NoResultException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -69,10 +70,28 @@ public class Service {
             System.out.println("3.Update a Product");
             System.out.println("4.Delete a Product");
             System.out.println("5.Show all Products");
-            System.out.println("6.Stock Controller");
+            System.out.println("6.Back to Main Menu");
             System.out.println("7.Exit");
             int productCommand = scanner.nextInt();
             executeProductCommand(productCommand);
+        }
+    }
+
+    private void doCommandsForGuests() {
+        while (isRunning) {
+            product = new Product();
+            description = new Description();
+            stock = new Stock();
+
+            System.out.println("Choose a command:");
+            System.out.println("1.FindProductById");
+            System.out.println("2.Insert a Product");
+            System.out.println("3.Update a Product");
+            System.out.println("4.Delete a Product");
+            System.out.println("5.Show all Products");
+            System.out.println("6.Exit");
+            int productCommand = scanner.nextInt();
+            executeProductCommandForGuest(productCommand);
         }
     }
 
@@ -92,6 +111,7 @@ public class Service {
             String hashedPassword = generateHash(saltedPassword);
 
             user.setPassword(hashedPassword);
+            user.setRol("guest");
             userDao.insertUser(user);
             System.out.println("You've registered successfully.");
             executeCommand(1);
@@ -105,15 +125,112 @@ public class Service {
     private void logIn() {
         System.out.println("You about to log in.");
         System.out.print("Please enter your username:");
-        String username = scanner.next();
+        String userName = scanner.next();
         System.out.print("Please enter your password");
         String password = scanner.next();
-
-        if (userDao.findUserAndPasswordFromDatabase(username, password)) {
-            System.out.println("Log In successfully");
-            doCommands();
+        try {
+            if (userDao.findUserRol(userName, generateHash("bubulici" + password)).equals("admin")) {
+                System.out.println();
+                System.out.println("Hi Boss,");
+                System.out.println("Welcome in your virtual store manager!");
+                System.out.println();
+                selectCommands();
+            } else if (userDao.findUserAndPasswordFromDatabase(userName, password)) {
+                System.out.println("Log In successfully");
+                doCommandsForGuests();
+            }
+        } catch (NoResultException e) {
+            System.out.println("Wrong password or username");
+            logIn();
         }
     }
+
+    public void selectCommands() {
+        System.out.println("Choose a option");
+        System.out.println("1.Product's Menu");
+        System.out.println("2.User's Menu");
+        System.out.println("3.Stock's Menu");
+        System.out.println("4.Exit");
+        int command = scanner.nextInt();
+        if (command == 1) {
+            doCommands();
+        } else if (command == 2) {
+            doAdminCommands();
+        } else if (command == 3) {
+            executeStockCommand();
+        } else if (command == 4) {
+            System.out.println("Goodbye");
+            isRunning = false;
+        } else {
+            System.out.println("Choose a number between 1 and 4");
+            selectCommands();
+        }
+
+    }
+
+    public void doAdminCommands() {
+        System.out.println("1.Show all users");
+        System.out.println("2.Find the user by ID");
+        System.out.println("3.Update the rol of the member, found by ID");
+        System.out.println("4.Back to Main Menu");
+        System.out.println("5.Exit");
+        System.out.println();
+        int command = scanner.nextInt();
+        if (command > 0 && command < 6) {
+            executeAdminCommand(command);
+        } else {
+            System.out.println("Please, enter a number between 1 and 5");
+            System.out.println();
+            doAdminCommands();
+        }
+    }
+
+    public void executeAdminCommand(int command) {
+        switch (command) {
+            case 1:
+                System.out.println("This command will show all users.");
+                List<User> users = userDao.showAllUsers();
+                for (User u : users) {
+                    System.out.println(u);
+                }
+                doAdminCommands();
+                break;
+            case 2:
+                System.out.println("Enter user's ID:");
+                int id = scanner.nextInt();
+                System.out.println(userDao.findUserById(id));
+                doAdminCommands();
+                break;
+            case 3:
+                User newUser = new User();
+                System.out.println("This command will update user's rol in store");
+                System.out.println("Insert the id of the user you wish to update:");
+                int idUser = scanner.nextInt();
+                newUser.setId(idUser);
+
+                System.out.print("Insert the new rol for the user:");
+                String newUserRol = scanner.next();
+                newUser.setRol(newUserRol);
+
+                newUser.setPassword(userDao.findUserById(idUser).getPassword());
+                newUser.setUsername(userDao.findUserById(idUser).getUsername());
+
+                userDao.updateUserRol(newUser);
+                doAdminCommands();
+
+                break;
+            case 4:
+                selectCommands();
+            case 5:
+                isRunning = false;
+                System.out.println("Goodbye!");
+                break;
+            default:
+                System.out.println("Please enter a number between 1 and 5");
+                doAdminCommands();
+        }
+    }
+
 
     public void executeProductCommand(int productCommand) {
         switch (productCommand) {
@@ -133,8 +250,34 @@ public class Service {
                 showAllProductsCommand();
                 break;
             case 6:
-                executeStockCommand();
+                selectCommands();
             case 7:
+                System.out.println("Goodbye!");
+                isRunning = false;
+                break;
+            default:
+                isRunning = false;
+        }
+    }
+
+    public void executeProductCommandForGuest(int productCommand) {
+        switch (productCommand) {
+            case 1:
+                findProductByIdCommand();
+                break;
+            case 2:
+                insertProductCommand();
+                break;
+            case 3:
+                updateProductCommand();
+                break;
+            case 4:
+                deleteProductCommand();
+                break;
+            case 5:
+                showAllProductsCommand();
+                break;
+            case 6:
                 System.out.println("Goodbye!");
                 isRunning = false;
                 break;
@@ -251,30 +394,7 @@ public class Service {
         System.out.println(productDAO.findProductById(productId));
     }
 
-    public String md5(String input) {
-
-        String md5 = null;
-
-        if (null == input) return null;
-
-        try {
-
-            //Create MessageDigest object for MD5
-            MessageDigest digest = MessageDigest.getInstance("MD5");
-
-            //Update input string in message digest
-            digest.update(input.getBytes(), 0, input.length());
-
-            //Converts message digest value in base 16 (hex)
-            md5 = new BigInteger(1, digest.digest()).toString(16);
-
-        } catch (NoSuchAlgorithmException e) {
-            System.out.println("I'm sorry, but MD5 is not a valid message digest algorithm");
-        }
-        return md5;
-    }
-
-    public static String generateHash(String input) {
+    public String generateHash(String input) {
         StringBuilder hash = new StringBuilder();
 
         try {
@@ -302,7 +422,7 @@ public class Service {
             System.out.println("2.Display the stock of each product");
             System.out.println("3.Show products with stock = 0");
             System.out.println("4.Displays products with sufficient stock(stock>10)");
-            System.out.println("5.Back to the main menu");
+            System.out.println("5.Back to Main Menu");
             System.out.println("6.Exit");
             int command = scanner.nextInt();
 
@@ -345,9 +465,10 @@ public class Service {
                 System.out.println();
                 break;
             case 5:
-                doCommands();
+                selectCommands();
                 break;
             case 6:
+                System.out.println("Goodbye!");
                 executeStock = false;
             default:
                 executeStock = false;
