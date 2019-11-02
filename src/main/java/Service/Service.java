@@ -140,7 +140,8 @@ public class Service {
                 doCommandsForGuests();
             }
         } catch (NoResultException e) {
-            System.out.println("Wrong password or username");
+            System.out.println("Wrong password or username!");
+            System.out.println("Please, try again:");
             logIn();
         }
     }
